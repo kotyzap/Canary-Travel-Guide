@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Hierro Tourist Guide</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 1rem; background-color: #333; color: white; }
+  .container { width: 95%; margin: auto; text-align: center; }
+  .header { display: flex; justify-content: space-between; padding: 10px; font-size: 1.2em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.place-item {
+  background-color: #f0f0f0;
+  min-height: 280px; /* Adjust based on your content */
+  color: black;
+  padding: 15px;
+  border-radius: 5px;
+  flex: 1 1 250px; /* Adjusts the basis width and allows flex-grow */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This ensures that the footer is always at the bottom */
+}
+
+  .place-item h2 {
+    margin-top: 0;
+    font-size: 1.2em; /* Adjusted font size */
+    height: 3em; /* Fixed height to accommodate two lines */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Media Query for Smaller Screens */
+  @media screen and (max-width: 320px) {
+    .place-item h2 {
+      font-size: 1em; /* Smaller font size for watch screens */
+    }
+  }
+}
+  .place-item p { font-size: 0.9em; }
+  .link-button { 
+    display: block; 
+    margin-bottom: 10px; 
+    padding: 12px; 
+    background-color: #007bff; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 5px; 
+    text-align: center;
+    min-height: 48px;
+  }
+
+    footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.8em;
+    background-color: #222;
+    color: #aaa;
+    margin-top: 20px;
+  }
+
+</style>
+<script>
+
+function applyDayNightTheme() {
+  const hour = new Date().getHours();
+  const isDayTime = hour > 6 && hour < 18;
+
+  const body = document.body;
+  const header = document.querySelector('.header');
+  const grid = document.querySelector('.grid');
+
+  if (isDayTime) {
+    body.style.backgroundColor = '#fff'; // Light background for day
+    body.style.color = '#333'; // Dark text for day
+    header.style.backgroundColor = '#f0f0f0';
+    grid.style.backgroundColor = '#f0f0f0';
+  } else {
+    body.style.backgroundColor = '#333'; // Dark background for night
+    body.style.color = '#fff'; // Light text for night
+    header.style.backgroundColor = '#444';
+    grid.style.backgroundColor = '#444';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  applyDayNightTheme();
+  setInterval(applyDayNightTheme, 3600000); // Update every hour
+
+  // ... rest of your existing code ...
+});
+
+
+function updatePlacesList() {
+  const grid = document.querySelector('.grid');
+  grid.innerHTML = '';
+  places.forEach(place => {
+    const distance = getDistanceFromLatLonInKm(userLat, userLng, place.lat, place.lng).toFixed(2);
+    place.element.className = 'place-item';
+    place.element.innerHTML = `
+      <h2>${place.name}</h2>
+      <p>${place.description}</p>
+      <p><strong>${distance} km away</strong></p>
+      <a href="https://www.google.com/maps/@${place.lat},${place.lng},17z?entry=ttu" class="link-button">Google Maps</a>
+    `;
+    grid.appendChild(place.element);
+  });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const places = [
+ {
+  name: 'Centro De Interpretación De El Julan',
+  description: 'A center interpreting the cultural and natural heritage of El Julan.',
+  lat: 27.7111,
+  lng: -18.0367,
+  element: document.createElement('div')
+},
+{
+  name: 'Ecomuseum of Guinea',
+  description: 'An ecomuseum showcasing the history and nature of El Hierro.',
+  lat: 27.7536,
+  lng: -17.9840,
+  element: document.createElement('div')
+},
+{
+  name: 'Centro de Interpretación Geológica',
+  description: 'A geological interpretation center in El Hierro.',
+  lat: 27.7620,
+  lng: -17.9630,
+  element: document.createElement('div')
+},
+{
+  name: 'Ethnographic Center Casa de las Quinteras',
+  description: 'An ethnographic center preserving the cultural heritage of El Hierro.',
+  lat: 27.8072,
+  lng: -17.9156,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de la Peña',
+  description: 'A stunning viewpoint offering panoramic views of El Hierro.',
+  lat: 27.8045,
+  lng: -17.9267,
+  element: document.createElement('div')
+},
+{
+  name: 'Museo Arqueológico de El Hierro',
+  description: 'A museum dedicated to the archaeological heritage of the island.',
+  lat: 27.7500,
+  lng: -17.9800,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de Isora',
+  description: 'A beautiful viewpoint overlooking the Isora valley.',
+  lat: 27.7469,
+  lng: -17.9639,
+  element: document.createElement('div')
+},
+{
+  name: 'Casa de la Cultura de El Hierro',
+  description: 'A cultural center hosting various local art and cultural events.',
+  lat: 27.7600,
+  lng: -17.9600,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de Las Playas',
+  description: 'An impressive viewpoint offering views of the rugged coastline.',
+  lat: 27.7280,
+  lng: -17.9840,
+  element: document.createElement('div')
+},
+{
+  name: 'Ecomuseo de Guinea y Lagartario',
+  description: 'An eco-museum featuring local wildlife and history.',
+  lat: 27.7500,
+  lng: -18.0100,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de Jinama',
+  description: 'A scenic viewpoint overlooking the valley.',
+  lat: 27.7700,
+  lng: -17.9800,
+  element: document.createElement('div')
+},
+{
+  name: 'Virgen de Los Reyes',
+  description: 'A historic sanctuary and a significant religious site.',
+  lat: 27.7800,
+  lng: -17.9700,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de Tanajara',
+  description: 'A viewpoint offering breathtaking views of El Hierro\'s landscapes.',
+  lat: 27.7600,
+  lng: -17.9500,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de Bascos',
+  description: 'A panoramic viewpoint overlooking the El Golfo valley.',
+  lat: 27.7700,
+  lng: -18.0000,
+  element: document.createElement('div')
+},
+{
+  name: 'Frontera Rural Park',
+  description: 'A natural park offering diverse landscapes and hiking trails.',
+  lat: 27.7500,
+  lng: -18.0200,
+  element: document.createElement('div')
+},
+{
+  name: 'El Sabinar',
+  description: 'An area famous for its ancient, wind-twisted juniper trees.',
+  lat: 27.7400,
+  lng: -18.0300,
+  element: document.createElement('div')
+},
+{
+  name: 'Pozo de las Calcosas',
+  description: 'A picturesque coastal village known for its natural swimming pools.',
+  lat: 27.7300,
+  lng: -17.9900,
+  element: document.createElement('div')
+},
+{
+  name: 'La Maceta Natural Pools',
+  description: 'Natural swimming pools offering a unique bathing experience.',
+  lat: 27.7200,
+  lng: -18.0000,
+  element: document.createElement('div')
+},
+{
+  name: 'Hoya del Morcillo',
+  description: 'A beautiful forested area ideal for picnics and nature walks.',
+  lat: 27.7100,
+  lng: -17.9800,
+  element: document.createElement('div')
+},
+{
+  name: 'Playa de Timijiraque',
+  description: 'A serene beach with black sand and clear waters.',
+  lat: 27.6900,
+  lng: -17.9600,
+  element: document.createElement('div')
+},
+{
+  name: 'Faro de Orchilla',
+  description: 'A historic lighthouse located at the westernmost point of Spain.',
+  lat: 27.7150,
+  lng: -18.1500,
+  element: document.createElement('div')
+},
+{
+  name: 'Roque de la Bonanza',
+  description: 'A striking rock formation on the eastern coast of El Hierro.',
+  lat: 27.7300,
+  lng: -17.9200,
+  element: document.createElement('div')
+},
+{
+  name: 'Charco Azul',
+  description: 'A natural pool known for its clear blue waters and scenic surroundings.',
+  lat: 27.7500,
+  lng: -17.9600,
+  element: document.createElement('div')
+},
+{
+  name: 'Mirador de la Estaca',
+  description: 'A viewpoint offering spectacular views of the sea and cliffs.',
+  lat: 27.7700,
+  lng: -17.9100,
+  element: document.createElement('div')
+},
+{
+  name: 'Pinar de Tamaduste',
+  description: 'A lush pine forest ideal for hiking and nature exploration.',
+  lat: 27.7800,
+  lng: -17.9300,
+  element: document.createElement('div')
+},
+{
+  name: 'Las Puntas',
+  description: 'A charming coastal area with unique rock formations and natural pools.',
+  lat: 27.7500,
+  lng: -17.9700,
+  element: document.createElement('div')
+},
+{
+  name: 'Montaña de Tenerife',
+  description: 'A scenic mountain offering hiking trails and panoramic views.',
+  lat: 27.7200,
+  lng: -17.9500,
+  element: document.createElement('div')
+},
+{
+  name: 'Playa del Verodal',
+  description: 'A stunning red sand beach known for its dramatic landscape.',
+  lat: 27.7000,
+  lng: -18.1200,
+  element: document.createElement('div')
+},
+{
+  name: 'Barranco de las Angustias',
+  description: 'A picturesque ravine with diverse flora and fauna.',
+  lat: 27.7600,
+  lng: -17.9800,
+  element: document.createElement('div')
+},
+{
+  name: 'Hoya del Morcillo',
+  description: 'A serene forested area ideal for camping and nature walks.',
+  lat: 27.7600, // Replace with actual latitude
+  lng: -17.9500, // Replace with actual longitude
+  element: document.createElement('div')
+},
+/*
+    {
+      name: 'Praha',
+      description: 'Charming town with historic architecture and beautiful gardens.',
+      lat: 50.3908,
+      lng: 16.5231,
+      element: document.createElement('div')
+    }  ,
+    {
+      name: 'Plzen',
+      description: 'Charming town with historic architecture and beautiful gardens.',
+      lat: 45.3908,
+      lng: 13.5231,
+      element: document.createElement('div')
+    }    */
+
+    // Add more places here
+
+  ];
+
+   // New function to initialize place items
+  function initializePlacesList() {
+    const grid = document.querySelector('.grid');
+    places.forEach(place => {
+      place.element.className = 'place-item';
+      place.element.innerHTML = `
+        <h2>${place.name}</h2>
+        <p>${place.description}</p>
+        <a href="https://www.google.com/maps/@${place.lat},${place.lng},17z?entry=ttu" class="link-button">Google Maps</a>
+      `;
+      grid.appendChild(place.element);
+    });
+  }
+
+  // Call the initialization function
+  initializePlacesList();
+
+let userLat, userLng;
+
+function sortPlacesByProximity(position) {
+  userLat = position.coords.latitude;
+  userLng = position.coords.longitude;
+    updateCoordinates(position);
+  }
+
+function sortPlacesByProximity(position) {
+  userLat = position.coords.latitude;
+  userLng = position.coords.longitude;
+  places.sort((a, b) => {
+    const distanceA = getDistanceFromLatLonInKm(userLat, userLng, a.lat, a.lng);
+    const distanceB = getDistanceFromLatLonInKm(userLat, userLng, b.lat, b.lng);
+    return distanceA - distanceB;
+  });
+  updatePlacesList();
+}
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);
+    var dLon = deg2rad(lon2-lon1); 
+    var a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI/180);
+  }
+
+function updatePlacesList() {
+  const grid = document.querySelector('.grid');
+  grid.innerHTML = '';
+  places.forEach(place => {
+    const distance = getDistanceFromLatLonInKm(userLat, userLng, place.lat, place.lng).toFixed(2);
+    place.element.className = 'place-item';
+    place.element.innerHTML = `
+      <h3>${place.name}</h3>
+      <p>${place.description}</p>
+      <a href="https://www.google.com/maps/@${place.lat},${place.lng},17z?entry=ttu" class="link-button">Google Maps<br>${distance} km</a>
+    `;
+    grid.appendChild(place.element);
+  });
+}
+
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('time').textContent = now.toLocaleTimeString();
+  }
+
+  function updateCoordinates(position) {
+    document.getElementById('coordinates').textContent = `Lat: ${position.coords.latitude.toFixed(2)}, Lon: ${position.coords.longitude.toFixed(2)}`;
+  }
+
+  setInterval(updateTime, 1000);
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(sortPlacesByProximity);
+  } else {
+    console.log("Geolocation is not supported by this browser.");
+  }
+});
+</script>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div id="time"></div>
+    <div id="coordinates"></div>
+  </div>
+  <h1>Welcome to the El Hierro Tourist Guide</h1>
+  <div class="grid">
+    <!-- Place items will be dynamically added here -->
+  </div>
+</div>
+<footer>
+    Author: Pavel K.
+</footer>
+</body>
+</html>
